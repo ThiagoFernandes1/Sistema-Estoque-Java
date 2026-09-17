@@ -1,0 +1,15 @@
+target/
+*.class
+*.jar
+*.log
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Credenciais locais (mantenha apenas o exemplo versionado)
+src/main/resources/db.local.properties
