@@ -35,7 +35,7 @@ Sistema-Estoque-Java/
 │   ├── model/                      # Produto, Categoria
 │   ├── dao/                        # ProdutoDAO, CategoriaDAO — todo o SQL vive aqui
 │   └── ui/MenuConsole.java         # Menu de texto
-├── src/main/resources/db.properties
+├── src/main/resources/db.properties  # exemplo; credenciais reais em db.local.properties
 └── pom.xml
 ```
 
@@ -76,7 +76,7 @@ O script cria o banco `EstoqueDB`, as tabelas, a view e insere 6 produtos de exe
 
 ### 2. Configurar as credenciais
 
-Edite `src/main/resources/db.properties`:
+Crie `src/main/resources/db.local.properties` (já está no `.gitignore`) com as suas credenciais. As chaves dele substituem as de `db.properties`, que fica versionado só como exemplo:
 
 ```properties
 db.url=jdbc:sqlserver://localhost:1433;databaseName=EstoqueDB;encrypt=true;trustServerCertificate=true
@@ -90,7 +90,7 @@ Para autenticação integrada do Windows, troque a URL por:
 db.url=jdbc:sqlserver://localhost:1433;databaseName=EstoqueDB;integratedSecurity=true;encrypt=true;trustServerCertificate=true
 ```
 
-> As variáveis de ambiente `DB_URL`, `DB_USER` e `DB_PASSWORD` têm prioridade sobre o arquivo — use-as para não versionar senha nenhuma.
+> As variáveis de ambiente `DB_URL`, `DB_USER` e `DB_PASSWORD` têm prioridade sobre os dois arquivos.
 
 ### 3. Compilar e executar
 

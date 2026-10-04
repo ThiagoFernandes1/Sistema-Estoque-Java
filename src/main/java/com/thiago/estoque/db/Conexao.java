@@ -10,13 +10,15 @@ import java.util.Properties;
 /**
  * Centraliza a abertura de conexoes com o SQL Server.
  *
- * As credenciais vem de src/main/resources/db.properties e podem ser
- * sobrescritas por variaveis de ambiente (DB_URL, DB_USER, DB_PASSWORD),
- * para que nenhuma senha real precise ser versionada.
+ * As credenciais vem de src/main/resources/db.properties. Se existir um
+ * db.local.properties ao lado dele (ignorado pelo git), os valores dele
+ * prevalecem; e as variaveis de ambiente (DB_URL, DB_USER, DB_PASSWORD)
+ * prevalecem sobre os dois. Assim nenhuma senha real precisa ser versionada.
  */
 public final class Conexao {
 
     private static final String ARQUIVO = "/db.properties";
+    private static final String ARQUIVO_LOCAL = "/db.local.properties";
 
     private static final String url;
     private static final String usuario;
@@ -24,13 +26,9 @@ public final class Conexao {
 
     static {
         Properties props = new Properties();
-        try (InputStream in = Conexao.class.getResourceAsStream(ARQUIVO)) {
-            if (in != null) {
-                props.load(in);
-            }
-        } catch (IOException e) {
-            throw new ExceptionInInitializerError("Falha ao ler " + ARQUIVO + ": " + e.getMessage());
-        }
+        carregar(props, ARQUIVO);
+        // carregado depois para sobrescrever as chaves do arquivo versionado
+        carregar(props, ARQUIVO_LOCAL);
 
         url     = valor("DB_URL",      props.getProperty("db.url"));
         usuario = valor("DB_USER",     props.getProperty("db.user"));
@@ -38,6 +36,16 @@ public final class Conexao {
     }
 
     private Conexao() {
+    }
+
+    private static void carregar(Properties props, String arquivo) {
+        try (InputStream in = Conexao.class.getResourceAsStream(arquivo)) {
+            if (in != null) {
+                props.load(in);
+            }
+        } catch (IOException e) {
+            throw new ExceptionInInitializerError("Falha ao ler " + arquivo + ": " + e.getMessage());
+        }
     }
 
     private static String valor(String variavelAmbiente, String padrao) {
