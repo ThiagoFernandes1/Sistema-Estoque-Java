@@ -46,13 +46,13 @@ public class ProdutoDAO {
     }
 
     public List<Produto> buscarPorNome(String termo) throws SQLException {
-        String sql = SELECT_BASE + " WHERE p.nome LIKE ? ORDER BY p.nome";
+        String sql = SELECT_BASE + " WHERE p.nome LIKE ? ESCAPE '\\' ORDER BY p.nome";
 
         List<Produto> produtos = new ArrayList<>();
         try (Connection conn = Conexao.abrir();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + termo + "%");
+            ps.setString(1, "%" + escaparLike(termo) + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     produtos.add(mapear(rs));
@@ -262,6 +262,18 @@ public class ProdutoDAO {
     }
 
     /* ------------------------------ Auxiliar ------------------------------- */
+
+    /**
+     * No LIKE do SQL Server, %, _ e [ sao curingas. Sem escapar, buscar "50%"
+     * traria qualquer nome com "50", e "a_b" casaria "aXb". O \ escapa o
+     * proprio escape, depois cada curinga.
+     */
+    static String escaparLike(String termo) {
+        return termo.replace("\\", "\\\\")
+                    .replace("%", "\\%")
+                    .replace("_", "\\_")
+                    .replace("[", "\\[");
+    }
 
     private Produto mapear(ResultSet rs) throws SQLException {
         Produto p = new Produto();

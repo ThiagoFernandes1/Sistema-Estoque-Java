@@ -13,7 +13,7 @@ Sistema de controle de estoque em **Java 17** com **Microsoft SQL Server**, usan
 | # | Operação | O que faz |
 |---|---|---|
 | 1 | Listar produtos | Tabela com id, categoria, preço, quantidade e alerta de estoque baixo |
-| 2 | Buscar por nome | Busca parcial com `LIKE` parametrizado |
+| 2 | Buscar por nome | Busca parcial com `LIKE` parametrizado, tratando `%`, `_` e `[` digitados como texto |
 | 3 | Cadastrar produto | `INSERT` com recuperação do id gerado (`RETURN_GENERATED_KEYS`) |
 | 4 | Atualizar produto | `UPDATE` campo a campo, mantendo o valor atual quando deixado em branco |
 | 5 | Excluir produto | `DELETE` com confirmação; movimentações caem em cascata |
